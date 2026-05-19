@@ -2,6 +2,7 @@ package com.kodewala.service.Impl;
 
 import com.kodewala.dto.AccountDto;
 import com.kodewala.entity.Account;
+import com.kodewala.exception.AccountException;
 import com.kodewala.mapper.AccountMapper;
 import com.kodewala.repository.AccountRepository;
 import com.kodewala.service.IAccountService;
@@ -28,14 +29,14 @@ public class AccountServiceImpl  implements IAccountService {
     @Override
     public AccountDto getAccountById(Long id) {
 
-      Account account  =   accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not exits"));
+      Account account  =   accountRepository.findById(id).orElseThrow(()-> new AccountException("Account not exits"));
 
         return  AccountMapper.maptoAccountDto(account);
     }
 
     @Override
     public AccountDto deposite(Long id, double amount) {
-        Account account  =   accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not exits"));
+        Account account  =   accountRepository.findById(id).orElseThrow(()-> new AccountException("Account not exits"));
        double total =  account.getBalance()+amount;
         account.setBalance(total);
 
@@ -47,7 +48,7 @@ public class AccountServiceImpl  implements IAccountService {
     @Override
     public AccountDto withdrawAmount(Long id, double amount) {
 
-        Account account  =   accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not exits"));
+        Account account  =   accountRepository.findById(id).orElseThrow(()-> new AccountException("Account not exits"));
 
         if(account.getBalance()<amount){
             throw new RuntimeException("Insufficient funds");
@@ -75,7 +76,7 @@ public class AccountServiceImpl  implements IAccountService {
     @Override
     public AccountDto deleteAccountById(Long id) {
 
-        Account account  =   accountRepository.findById(id).orElseThrow(()-> new RuntimeException("Account not exits"));
+        Account account  =   accountRepository.findById(id).orElseThrow(()-> new AccountException("Account not exits"));
 
 
         accountRepository.deleteById(id);
